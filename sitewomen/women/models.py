@@ -10,6 +10,7 @@ class PublishedManager(models.Manager):
 class Category(models.Model):
     name = models.CharField(max_length=100, db_index=True)
     slug = models.SlugField(max_length=255, unique=True, db_index=True)
+    objects = models.Manager()
 
     def __str__(self):
         return self.name
@@ -52,6 +53,7 @@ class Husband(models.Model):
     name = models.CharField(max_length=100)
     age = models.IntegerField(null=True)
     m_count = models.IntegerField(blank=True, default=0)
+    objects = models.Manager()
 
     def __str__(self):
         return self.name
@@ -60,6 +62,7 @@ class Husband(models.Model):
 class TagPost(models.Model):
     tag = models.CharField(max_length=100, db_index=True)
     slug = models.SlugField(max_length=255, db_index=True)
+    objects = models.Manager()
 
     def __str__(self):
         return self.tag
