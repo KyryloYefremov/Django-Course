@@ -18,6 +18,10 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('category', kwargs={'cat_slug': self.slug})
 
+    class Meta:
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+
 
 class Women(models.Model):
     class Status(models.IntegerChoices):
@@ -29,7 +33,8 @@ class Women(models.Model):
     content = models.TextField(blank=True)  # blank=True - поле может быть пустым
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
-    is_published = models.BooleanField(choices=Status.choices, default=Status.DRAFT)
+    is_published = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)),
+                                       default=Status.DRAFT)
     cat = models.ForeignKey(to='Category', on_delete=models.PROTECT, related_name='posts')
     tags = models.ManyToManyField(to='TagPost', related_name='tags')
 
