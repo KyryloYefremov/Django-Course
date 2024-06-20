@@ -11,7 +11,8 @@ menu = [{'title': "О сайте", 'url_name': 'about'},
 
 
 def index(request):
-    posts = Women.published.all()
+    # Load all related data from category table when loading all published posts
+    posts = Women.published.all().select_related('cat')
     data = {
         'title': 'Главная страница',
         'menu': menu,
@@ -51,7 +52,7 @@ def login(request):
 
 def show_category(request, cat_slug):
     category = get_object_or_404(Category, slug=cat_slug)
-    posts = Women.published.filter(cat_id=category.pk)
+    posts = Women.published.filter(cat_id=category.pk).select_related('cat')
     data = {
         'title': f'Рубрика: {category.name}',
         'menu': menu,
@@ -67,7 +68,7 @@ def page_not_found(request, exception):
 
 def show_tag_postlist(request, tag_slug):
     tag = get_object_or_404(TagPost, slug=tag_slug)
-    posts = tag.tags.filter(is_published=Women.Status.PUBLISHED)
+    posts = tag.tags.filter(is_published=Women.Status.PUBLISHED).select_related('cat')
 
     data = {
         "title": f"Тег: {tag.tag}",
