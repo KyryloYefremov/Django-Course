@@ -37,7 +37,8 @@ class Women(models.Model):
                                        default=Status.DRAFT)
     cat = models.ForeignKey(to='Category', on_delete=models.PROTECT, related_name='posts')
     tags = models.ManyToManyField(to='TagPost', related_name='tags')
-
+    husband = models.OneToOneField(to='Husband', on_delete=models.SET_NULL, null=True, blank=True, related_name='women',
+                                   verbose_name='Husband')
     published = PublishedManager()
     objects = models.Manager()
 
