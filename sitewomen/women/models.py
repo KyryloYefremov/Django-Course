@@ -1,5 +1,19 @@
 from django.db import models
+from django.template.defaultfilters import slugify
 from django.urls import reverse
+
+
+def translit_to_eng(s: str) -> str:
+    """
+    Transliteration of Russian text into English letters for making slugs
+    :param s: Russian text
+    :return: Transliterated text
+    """
+    d = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e', 'ж': 'zh', 'з': 'z', 'и': 'i',
+         'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
+         'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch', 'ш': 'sh', 'щ': 'sch', 'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e',
+         'ю': 'yu', 'я': 'ya'}
+    return ''.join(map(lambda x: d[x] if d.get(x, False) else x, s.lower()))
 
 
 class PublishedManager(models.Manager):
@@ -55,6 +69,10 @@ class Women(models.Model):
 
     def get_absolute_url(self):
         return reverse('post', kwargs={'post_slug': self.slug})
+
+    # def save(self, *args, **kwargs):
+    #     self.slug = slugify(translit_to_eng(str(self.title)))
+    #     super().save(*args, **kwargs)
 
 
 class Husband(models.Model):
