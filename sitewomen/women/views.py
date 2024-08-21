@@ -44,11 +44,13 @@ def addpage(request):
         form = AddPostForm(request.POST)
         if form.is_valid():
             # Save the form data to the database
-            try:
-                Women.objects.create(**form.cleaned_data)
-                return redirect('home')
-            except Exception as e:
-                form.add_error(None, e)
+            # try:
+            #     Women.objects.create(**form.cleaned_data)
+            #     return redirect('home')
+            # except Exception as e:
+            #     form.add_error(None, e)
+            form.save()
+            return redirect('home')
     else:
         form = AddPostForm()
 
