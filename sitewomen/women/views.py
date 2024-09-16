@@ -113,3 +113,4 @@ def show_tag_postlist(request, tag_slug):
         "cat_selected": None,
     }
     return render(request, 'women/index.html', context=data)
+
