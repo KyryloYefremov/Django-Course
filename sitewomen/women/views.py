@@ -1,5 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
+from django.views.generic import TemplateView
 
 from .forms import AddPostForm, UploadFileForm
 from .models import Women, Category, TagPost, UploadFiles
@@ -114,3 +116,37 @@ def show_tag_postlist(request, tag_slug):
     }
     return render(request, 'women/index.html', context=data)
 
+
+class WomenHome(TemplateView):
+    template_name = "women/index.html"
+    extra_context = {
+        'title': 'Главная страница',
+        'menu': menu,
+        'posts': Women.published.all().select_related('cat'),
+        'cat_selected': 0,
+    }
+
+
+class AddPage(View):
+
+    def get(self, request):
+        form = AddPostForm()
+        data = {
+            'title': "Добавление статьи",
+            'menu': menu,
+            'form': form
+        }
+        return render(request, 'women/addpage.html', data)
+
+    def post(self, request):
+        form = AddPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+
+        data = {
+            'title': "Добавление статьи",
+            'menu': menu,
+            'form': form
+        }
+        return render(request, 'women/addpage.html', data)
